@@ -15,7 +15,7 @@ typedef struct book_node {
 		int year, month, day;
 	} publish_date;      //出版日期（年、月、日）  
 
-	char status[10];                    //借阅状态（两种状态：已借阅、未借阅）
+	int status;                    //借阅状态（两种状态：已借阅为1、未借阅为0）
 	struct book_node *next;     //     节点
 
 } book;
@@ -41,7 +41,7 @@ void display_book_info(void);
 /*-----查看个人信息display_user_info----*/
 void display_user_info(void);
 
-/*-----修改密码modify_password--------*/
+/*-----修改用户密码modify_password--------*/
 void modify_password(void);
 
 /*----------管理员界面函数admin_menu：打印管理员界面-------------*/
@@ -60,12 +60,9 @@ void auth_password_u(void);          //验证成功返回1，失败返回0
 void input(void);
 
 
-/*--------------------查看图书信息--------------------*/
-/*函数search_by_name：按书名查看图书信息*/
-void search_by_name(void);
-
-/*函数search_by_number：按书号查看图书信息*/
-void search_by_number(void);
+/*--------------------查找图书------------------------*/
+/*函数search_book：进入后输入书名或书号，进行查找*/
+void search_book(void);
 
 /*函数display_all：查看所有图书信息*/
 void display_all(void);

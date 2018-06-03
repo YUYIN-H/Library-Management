@@ -1,15 +1,2 @@
-﻿  library.cpp
-  main.cpp
-  正在生成代码...
-library.obj : error LNK2019: 无法解析的外部符号 "void __cdecl display_user_info(void)" (?display_user_info@@YAXXZ)，该符号在函数 "void __cdecl user_menu(void)" (?user_menu@@YAXXZ) 中被引用
-library.obj : error LNK2019: 无法解析的外部符号 "void __cdecl modify_password(void)" (?modify_password@@YAXXZ)，该符号在函数 "void __cdecl admin_menu(void)" (?admin_menu@@YAXXZ) 中被引用
-library.obj : error LNK2019: 无法解析的外部符号 "void __cdecl input(void)" (?input@@YAXXZ)，该符号在函数 "void __cdecl admin_menu(void)" (?admin_menu@@YAXXZ) 中被引用
-library.obj : error LNK2019: 无法解析的外部符号 "void __cdecl display_all(void)" (?display_all@@YAXXZ)，该符号在函数 "void __cdecl display_book_info(void)" (?display_book_info@@YAXXZ) 中被引用
-library.obj : error LNK2019: 无法解析的外部符号 "void __cdecl display_unborrowed(void)" (?display_unborrowed@@YAXXZ)，该符号在函数 "void __cdecl display_book_info(void)" (?display_book_info@@YAXXZ) 中被引用
-library.obj : error LNK2019: 无法解析的外部符号 "void __cdecl display_borrowed(void)" (?display_borrowed@@YAXXZ)，该符号在函数 "void __cdecl display_book_info(void)" (?display_book_info@@YAXXZ) 中被引用
-library.obj : error LNK2019: 无法解析的外部符号 "void __cdecl borrow_book(void)" (?borrow_book@@YAXXZ)，该符号在函数 "void __cdecl user_menu(void)" (?user_menu@@YAXXZ) 中被引用
-library.obj : error LNK2019: 无法解析的外部符号 "void __cdecl change_book_info(void)" (?change_book_info@@YAXXZ)，该符号在函数 "void __cdecl admin_menu(void)" (?admin_menu@@YAXXZ) 中被引用
-library.obj : error LNK2019: 无法解析的外部符号 "void __cdecl delete_book(void)" (?delete_book@@YAXXZ)，该符号在函数 "void __cdecl admin_menu(void)" (?admin_menu@@YAXXZ) 中被引用
-main.obj : error LNK2019: 无法解析的外部符号 "void __cdecl auth_password_a(void)" (?auth_password_a@@YAXXZ)，该符号在函数 _main 中被引用
-main.obj : error LNK2019: 无法解析的外部符号 "void __cdecl auth_password_u(void)" (?auth_password_u@@YAXXZ)，该符号在函数 _main 中被引用
-E:\STUDY-WHU\C大作业\Library Management\main\Debug\Library Management.exe : fatal error LNK1120: 11 个无法解析的外部命令
+﻿  main.cpp
+  main.vcxproj -> E:\STUDY-WHU\C大作业\Library Management\main\Debug\Library Management.exe
