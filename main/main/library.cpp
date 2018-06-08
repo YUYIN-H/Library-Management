@@ -1,7 +1,55 @@
 #include"stdafx.h"
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #include "library.h"
+#define FILENAME "123.txt"
+
+
+/*-----------load函数：加载文件（返回值为链表指针）（尾插法创建链表）----------*/
+BOOK_LIST load(void)
+{
+	BOOK_LIST head, new_node, tail;		/*头指针、新节点指针、尾指针*/
+	
+	FILE *fp;			
+
+	head = NULL;
+	tail = NULL;
+
+	if (fopen_s(&fp, FILENAME, "rb") == 1)		//判断文件是否打开
+	{
+		printf("Can not open the file %s\n", FILENAME);
+		return head;
+	}
+	else
+	{
+		while (!feof(fp))		//feof()：用来判断指针是否已经到达文件尾部
+		{
+			new_node = (BOOK_LIST)malloc(sizeof(BOOK));
+			if (!new_node) {
+				printf("Out of memory.\n");
+				exit(1);
+			}
+
+			//读取图书信息
+			fscanf_s(fp, "%d%s%s%s%s%d", &new_node->num, new_node->name, 40, new_node->author, 20, new_node->publish, 40, new_node->publish_date, 20, &new_node->status);
+			new_node->next = NULL;
+
+			//创建链表（尾插法）
+			if (head == NULL)
+				head = new_node;
+			else
+				tail->next = new_node;
+
+			tail = new_node;
+
+			printf("%d%s%s%s%s%d\n", new_node->num, new_node->name, new_node->author, new_node->publish, new_node->publish_date, new_node->status);
+		}
+		fclose(fp);
+		return(head);
+	}
+}
+
 
 
 /*-----查看个人信息display_user_info----*/
@@ -28,9 +76,83 @@ void auth_password_u(void)         //验证成功返回1，失败返回0
 }
 
 /*函数input：录入图书信息*/
-void input(void)
+BOOK_LIST input(BOOK_LIST head)
 {
+	FILE *fp;
+	BOOK_LIST temp, p, marker;		/*temp:新节点指针; 两个标记节点指针*/
+	marker = NULL;
 
+	temp = (BOOK_LIST)malloc(sizeof(BOOK));
+	if (!temp){
+		printf("Out of memory.\n");
+		exit(1);
+	}
+
+	//录入数据
+	printf("\n\n\t书号：");
+	scanf_s("%d", &temp->num);
+	getchar();
+	printf("\n\t书名：");
+	gets_s(temp->name);
+	fflush(stdin);
+	printf("\n\t作者：");
+	gets_s(temp->author);
+	fflush(stdin);
+	printf("\n\t出版社：");
+	gets_s(temp->publish);
+	fflush(stdin);
+	printf("\n\t出版时间(格式：1970-01-01)：");
+	gets_s(temp->publish_date);
+	fflush(stdin);
+	temp->status = 0;
+
+	//将新节点插入链表（按书号顺序）
+	p = head;
+	while (p != NULL && p->num < temp->num)
+	{
+		marker = p;
+		p = p->next;
+	}
+
+	if (p == head)
+	{
+		temp->next = head;
+		head = temp;
+	}
+	else
+	{
+		marker->next = temp;
+		temp->next = marker;
+	}
+	printf("\n是否保存？(Y/N)");
+
+
+	//将链表数据写入文件
+	if (getchar() == 'Y')
+	{
+		fflush(stdin);
+		if (fopen_s(&fp, FILENAME, "w") == 1)
+		{
+			printf("Can not open the file %s\n", FILENAME);
+			return head;
+		}
+		else
+		{
+			//fprintf(fp, "书号\t书名\t\t\t作者\t\t出版社\t\t\t出版时间\t\t\t借阅状态\n");
+			for (p = head; p != NULL; p = p->next)
+			{
+				fprintf(fp, "%-10d", p->num);
+				fprintf(fp, "%-25s", p->name);
+				fprintf(fp, "%-20s", p->author);
+				fprintf(fp, "%-20s", p->publish);
+				fprintf(fp, "%-15s", p->publish_date);
+				fprintf(fp, "%-5d\n", p->status);
+			}
+				
+		}
+		fclose(fp);
+	}
+	return head;
 }
 
 /*函数search_book：进入后输入书名或书号，进行查找*/
@@ -48,12 +170,33 @@ void display_all(void)
 
 /*--------------------筛选图书------------------*/
 /*函数display_unborrowed：查看所有未借阅书籍信息*/
-void display_unborrowed(void)
-{
 
+void display_unborrowed(BOOK_LIST head)
+{
 }
+	/*
+	BOOK_LIST p;
+	p = head;
+	int flag = 0;
+
+	printf("%-30s%-40s%-30s%-50s%-40s\n", "书号", "书名", "作者", "出版社", "出版时间");
+	while (p != NULL) {
+		if (p->status == 0)
+		{
+			printf("%-30d%-40s%-30s%-50s%d年%d月%d日\n", p->num, p->name, p->author, p->publish, p->publish_date);
+			flag = 1;
+		}
+		p = p->next;
+	}
+	if (flag == 0)
+		printf("所有图书均已借出！");
+}
+
+*/
+
+
 /*函数display_borrowed：查看所有已借阅图书信息*/
-void display_borrowed(void)
+void display_borrowed()
 {
 
 }
