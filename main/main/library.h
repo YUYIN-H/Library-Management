@@ -79,7 +79,7 @@ void display_all(void);
 /*函数display_unborrowed：查看所有未借阅书籍信息*/
 void display_unborrowed(BOOK_LIST head);
 /*函数display_borrowed：查看所有已借阅图书信息*/
-void display_borrowed(void);
+void display_borrowed(BOOK_LIST head);
 
 /*-------------------借阅图书-------------------*/
 /*函数borrow_book：借阅图书*/
@@ -91,8 +91,9 @@ void change_book_info(void);
 
 /*-------------------删除图书-------------------*/
 /*函数delete_book：删除图书信息*/
-void delete_book(void);
+BOOK_LIST delete_book(BOOK_LIST head);
 
 
 
-
+/*-------------将链表数据写入文件---------------*/
+BOOK_LIST data_to_file(BOOK_LIST head);

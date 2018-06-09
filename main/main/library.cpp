@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include "library.h"
-#define FILENAME "123.txt"
+#define FILENAME "Book_info.txt"
 
 
 /*-----------load函数：加载文件（返回值为链表指针）（尾插法创建链表）----------*/
@@ -44,11 +44,44 @@ BOOK_LIST load(void)
 			tail = new_node;
 
 			printf("%d%s%s%s%s%d\n", new_node->num, new_node->name, new_node->author, new_node->publish, new_node->publish_date, new_node->status);
+			//此条语句为了测试链表是否创建成功，会打印在屏幕上，最后要删掉
+
 		}
 		fclose(fp);
 		return(head);
 	}
 }
+
+
+
+/*-------------data_to_file()：将链表数据写入文件（共用）---------------*/
+BOOK_LIST data_to_file(BOOK_LIST head)
+{
+	FILE *fp;
+	BOOK_LIST p;
+
+	if (fopen_s(&fp, FILENAME, "w") == 1)
+	{
+		printf("Can not open the file %s\n", FILENAME);
+		return head;
+	}
+	else
+	{
+		//fprintf(fp, "书号\t书名\t\t\t作者\t\t出版社\t\t\t出版时间\t\t\t借阅状态\n");
+		for (p = head; p != NULL; p = p->next)
+		{
+			fprintf(fp, "\n%-10d", p->num);
+			fprintf(fp, "%-25s", p->name);
+			fprintf(fp, "%-20s", p->author);
+			fprintf(fp, "%-20s", p->publish);
+			fprintf(fp, "%-15s", p->publish_date);
+			fprintf(fp, "%5d", p->status);
+		}
+	}
+	fclose(fp);
+	return head;
+}
+
 
 
 
@@ -78,7 +111,6 @@ void auth_password_u(void)         //验证成功返回1，失败返回0
 /*函数input：录入图书信息*/
 BOOK_LIST input(BOOK_LIST head)
 {
-	FILE *fp;
 	BOOK_LIST temp, p, marker;		/*temp:新节点指针; 两个标记节点指针*/
 	marker = NULL;
 
@@ -121,8 +153,8 @@ BOOK_LIST input(BOOK_LIST head)
 	}
 	else
 	{
+		temp->next = marker->next;
 		marker->next = temp;
-		temp->next = marker;
 	}
 	printf("\n是否保存？(Y/N)");
 
@@ -130,27 +162,8 @@ BOOK_LIST input(BOOK_LIST head)
 	//将链表数据写入文件
 	if (getchar() == 'Y')
 	{
-		fflush(stdin);
-		if (fopen_s(&fp, FILENAME, "w") == 1)
-		{
-			printf("Can not open the file %s\n", FILENAME);
-			return head;
-		}
-		else
-		{
-			//fprintf(fp, "书号\t书名\t\t\t作者\t\t出版社\t\t\t出版时间\t\t\t借阅状态\n");
-			for (p = head; p != NULL; p = p->next)
-			{
-				fprintf(fp, "%-10d", p->num);
-				fprintf(fp, "%-25s", p->name);
-				fprintf(fp, "%-20s", p->author);
-				fprintf(fp, "%-20s", p->publish);
-				fprintf(fp, "%-15s", p->publish_date);
-				fprintf(fp, "%-5d\n", p->status);
-			}
-				
-		}
-		fclose(fp);
+		data_to_file(head);
+		printf("保存成功。");
 	}
 	return head;
 }
@@ -173,17 +186,15 @@ void display_all(void)
 
 void display_unborrowed(BOOK_LIST head)
 {
-}
-	/*
 	BOOK_LIST p;
 	p = head;
 	int flag = 0;
 
-	printf("%-30s%-40s%-30s%-50s%-40s\n", "书号", "书名", "作者", "出版社", "出版时间");
+	printf("%-10s%-25s%-20s%-20s%-20s\n", "书号", "书名", "作者", "出版社", "出版时间");
 	while (p != NULL) {
 		if (p->status == 0)
 		{
-			printf("%-30d%-40s%-30s%-50s%d年%d月%d日\n", p->num, p->name, p->author, p->publish, p->publish_date);
+			printf("%-10d%-25s%-20s%-20s%-20s\n", p->num, p->name, p->author, p->publish, p->publish_date);
 			flag = 1;
 		}
 		p = p->next;
@@ -192,13 +203,24 @@ void display_unborrowed(BOOK_LIST head)
 		printf("所有图书均已借出！");
 }
 
-*/
-
 
 /*函数display_borrowed：查看所有已借阅图书信息*/
-void display_borrowed()
+void display_borrowed(BOOK_LIST head)
 {
+	BOOK_LIST p;
+	p = head;
+	int flag = 1;
 
+	while (p != NULL) {
+		if (p->status == 1) 
+		{
+			printf("%-10d%-25s%-20s%-20s%-20s\n", p->num, p->name, p->author, p->publish, p->publish_date);
+			flag = 0;
+		}
+		p = p->next;
+	}
+	if (flag == 1)
+		printf("没有借出的图书！");
 }
 
 /*-------------------借阅图书-------------------*/
@@ -216,7 +238,75 @@ void change_book_info(void) {
 
 /*-------------------删除图书-------------------*/
 /*函数delete_book：删除图书信息*/
-void delete_book(void) 
+BOOK_LIST delete_book(BOOK_LIST head) 
 {
+	BOOK_LIST current, p;		/*被删除节点、前一个节点*/
+	int choice;
+	int temp_num;				/*要删除的书籍编号*/
+	char temp_name[40];			/*要删除的书籍名称*/
 
+	printf("\n-------------删除图书------------\n\n");
+	printf("          1、按书号删除\n");
+	printf("          2、按书名删除\n\n");
+	printf("---------------------------------\n");
+
+	printf("\n\t请选择删除的方式：");
+	scanf_s("%d", &choice);
+
+	switch (choice)
+	{
+	case 1:
+	{
+		printf("请输入要删除书籍的编号：");
+		scanf_s("%d", &temp_num);
+
+		current = head;
+		while (current->num != temp_num && current->next != NULL)
+		{
+			p = current;
+			current = current->next;
+		}
+		if (current->num == temp_num)
+		{
+			if (current == head)
+				head = current->next;
+			else
+				p->next = current->next;
+
+			free(current);
+		}
+		else
+			printf("查无此书！");
+
+		break;
+	}
+	case 2:
+	{
+		printf("请输入要删除书籍名称：");
+		gets_s(temp_name);
+
+		current = head;
+		while (strcpy_s(current->name, temp_name) == 0 && current->next != NULL)
+		{
+			p = current;
+			current = current->next;
+		}
+		if (strcpy_s(current->name, temp_name) == 0)
+		{
+			if (current == head)
+				head = current->next;
+			else
+				p->next = current->next;
+
+			free(current);
+		}
+		else
+			printf("查无此书！");
+	}
+	}
+	data_to_file(head);
+	return head;
 }
+
+
+
