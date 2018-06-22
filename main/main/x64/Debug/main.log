@@ -1,4 +1,3 @@
 ﻿  library.cpp
-e:\study-whu\c大作业\library management\main\main\library.cpp(409): warning C4101: “book_num”: 未引用的局部变量
-e:\study-whu\c大作业\library management\main\main\library.cpp(257): warning C4715: “search_by_num”: 不是所有的控件路径都返回值
+e:\study-whu\c大作业\library management\main\main\library.cpp(940): warning C4715: “delete_book”: 不是所有的控件路径都返回值
   main.vcxproj -> E:\STUDY-WHU\C大作业\Library Management\main\x64\Debug\Library Management.exe

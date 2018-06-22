@@ -14,6 +14,7 @@ typedef struct book_node {
 	char publish[40];               //出版社  
 	char publish_date[20];				//出版日期（年、月、日）  
 	int status;						//借阅状态（两种状态：已借阅为1、未借阅为0）
+	char readerID[20];				//借阅人ID
 	struct book_node *next;			//节点指针
 } BOOK;
 
@@ -21,13 +22,12 @@ typedef BOOK *BOOK_LIST;		//重新命名链表指针为 BOOK_LIST
 
 
 
-/*-----------------------用户信息---------------------*/
+/*-----------------------用户信息---------------------*/                //最大借书数量？？
 /*---------用户节点----------*/
 typedef struct reader_node {
-	int id;					//账号   
-	int password;			//密码  
-	BOOK borrowed;			//已借阅书籍
-	struct reader *next;
+	char id[20];					//账号   
+	char password[20];			//密码  
+	struct reader_node *next;
 } READER;
 
 typedef READER *READER_LIST;		//重新命名链表指针为 READER_LIST
@@ -37,11 +37,18 @@ typedef READER *READER_LIST;		//重新命名链表指针为 READER_LIST
 
 /*************函数声明************/
 
+
+void admin_menu(BOOK_LIST head);
+void user_menu(BOOK_LIST head, READER_LIST head2);
+
+
 /*-----------load函数：加载文件----------*/
 BOOK_LIST load(void);
 
-/*-----------用户界面函数user_menu：打印用户选择界面-------------*/
-void user_menu(BOOK_LIST head);
+/*-----------load2函数：加载读者文件（返回值为链表指针）（尾插法创建链表）----------*/
+READER_LIST load2(void);
+
+
 
 /*-----查看图书信息选择界面display_book_info：打印查看界面-----*/
 void display_book_info(BOOK_LIST head);
@@ -50,29 +57,17 @@ void display_book_info(BOOK_LIST head);
 void display_user_info(void);
 
 /*-----修改用户密码modify_password--------*/
-void modify_password(void);
-
-/*----------管理员界面函数admin_menu：打印管理员界面-------------*/
-void admin_menu(BOOK_LIST head);
-
-/*--------------------密码验证----------------------*/
-/*函数auth_password_a：管理员密码验证*/
-void auth_password_a(void);
-
-/*函数auth_password_u：用户密码验证*/
-void auth_password_u(void);          //验证成功返回1，失败返回0
-
+READER_LIST modify_password(READER_LIST head2);
 
 /*--------------------图书信息录入--------------------*/
 /*函数input：录入图书信息*/
 BOOK_LIST input(BOOK_LIST head);
 
-
 /*--------------------查找图书------------------------*/
 /*函数search_book：进入后输入书名或书号，进行查找*/
 void search_book(BOOK_LIST head);
 /*----函数search_by_num：按书号查询----*/
-BOOK_LIST search_by_num(BOOK_LIST head);
+void search_by_num(BOOK_LIST head);
 /*----函数search_by_num：按书名查询----*/
 void search_by_name(BOOK_LIST head);
 
@@ -95,9 +90,9 @@ void change_book_info(BOOK_LIST head);
 
 /*-------------------删除图书-------------------*/
 /*函数delete_book：删除图书信息*/
-void delete_book(BOOK_LIST head);
-
-
+BOOK_LIST delete_book(BOOK_LIST head);
 
 /*-------------将链表数据写入文件---------------*/
 BOOK_LIST data_to_file(BOOK_LIST head);
+
+READER_LIST data_to_file2(READER_LIST head2);
