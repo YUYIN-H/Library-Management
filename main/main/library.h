@@ -54,8 +54,7 @@ READER_LIST load2(void);
 void display_book_info(BOOK_LIST head);
 
 /*-----查看个人信息display_user_info----*/
-void display_user_info(void);
-
+void display_user_info(READER_LIST head2, BOOK_LIST head);
 /*-----修改用户密码modify_password--------*/
 READER_LIST modify_password(READER_LIST head2);
 

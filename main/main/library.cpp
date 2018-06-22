@@ -45,9 +45,8 @@ BOOK_LIST load(void)
 				tail->next = new_node;
 
 			tail = new_node;
-
-			printf("%d%s%s%s%s%d%s\n", new_node->num, new_node->name, new_node->author, new_node->publish, new_node->publish_date, new_node->status, new_node->readerID);
-			//此条语句为了测试链表是否创建成功，会打印在屏幕上，最后要删掉
+			/*printf("%d%s%s%s%s%d%s\n", new_node->num, new_node->name, new_node->author, new_node->publish, new_node->publish_date, new_node->status, new_node->readerID);
+			此条语句为了测试链表是否创建成功，会打印在屏幕上，最后要删掉*/
 		}
 		fclose(fp);
 		return(head);
@@ -90,10 +89,6 @@ READER_LIST load2(void)
 				tail->next = new_node;
 
 			tail = new_node;
-
-			printf("%s%s\n", new_node->id, new_node->password);
-			//此条语句为了测试链表是否创建成功，会打印在屏幕上，最后要删掉
-
 		}
 		fclose(fp);
 		return(head);
@@ -145,7 +140,7 @@ READER_LIST data_to_file2(READER_LIST head2)
 		for (p = head2; p != NULL; p = p->next)
 		{
 			fprintf(fp, "\n%-19s", p->id);
-			fprintf(fp, "%-19s", p->password);
+			fprintf(fp, "%19s", p->password);
 		}
 	}
 	fclose(fp);
@@ -153,11 +148,49 @@ READER_LIST data_to_file2(READER_LIST head2)
 }
 
 
-
 /*-----查看个人信息display_user_info----*/
-void display_user_info(void) 
+void display_user_info(READER_LIST head2, BOOK_LIST head)
 {
+	READER_LIST p;
 
+	for (p = head2; p != NULL; p = p->next)
+	{
+		if (strcmp(p->id, ID) == 0)
+		{
+			printf("\n  %s同学, 您借阅的书籍如下：\n\n", p->id);
+			break;
+		}
+	}
+
+	BOOK_LIST q;
+	q = head;
+	int flag = 0;
+	printf(" +-----------------------------------------------------------------------------------------------+\n");
+	printf(" |  %-10s%-25s%-20s%-20s%-20s|\n", "书号", "书名", "作者", "出版社", "出版时间");
+	printf(" +-----------------------------------------------------------------------------------------------+\n");
+	while (q != NULL) {
+		if (q->status == 1)
+		{
+			if (strcmp(q->readerID, ID) == 0)		
+				printf(" |  %-10d%-25s%-20s%-20s%-20s|\n", q->num, q->name, q->author, q->publish, q->publish_date);
+			flag = 1;
+		}
+		q = q->next;
+	}
+	printf(" +-----------------------------------------------------------------------------------------------+\n");
+	printf("\n");
+	if (flag == 0)
+		printf("  目前没有借阅任何书籍.");
+	printf("\n");
+	printf("   输入Q返回：");
+
+	fflush(stdin);
+	getchar();
+	if (getchar() == 'Q')
+	{
+		system("cls");
+		return;
+	}
 }
 
 
@@ -170,15 +203,17 @@ READER_LIST modify_password(READER_LIST head2)
 	{
 		if (strcmp(p->id, ID) == 0)
 		{
-			printf("原密码为：%s\n\n", p->password);
-			printf("修改为：");                                        //验证修改信息与原信息是否相同？？
+			printf("\n\n  原密码为：%s\n\n", p->password);
+			printf("\n  修改为：");                                        //验证修改信息与原信息是否相同？？
 			getchar();
 			gets_s(p->password);
 			data_to_file2(head2);
-			printf("修改成功！");
+			printf("\n\n  修改成功！");
 			break;
 		}
 	}
+	Sleep(500);
+	system("cls");
 	return head2;
 }
 
@@ -305,13 +340,13 @@ void search_by_num(BOOK_LIST head)
 		{
 			printf("\n\n");
 			printf("             图书信息\n");
-			printf("-------------------------------\n");
-			printf("    编号：%d\n", p->num);
-			printf("    书名：%s\n", p->name);
-			printf("    作者：%s\n", p->author);
-			printf("    出版社：%s\n", p->publish);
-			printf("    出版时间：%s\n", p->publish_date);
-			printf("-------------------------------\n");
+			printf("  -------------------------------\n");
+			printf("      编号：%d\n", p->num);
+			printf("      书名：%s\n", p->name);
+			printf("      作者：%s\n", p->author);
+			printf("      出版社：%s\n", p->publish);
+			printf("      出版时间：%s\n", p->publish_date);
+			printf("  -------------------------------\n");
 			flag = 1;		//表明已经找到图书（编号唯一，故可停止查询）
 			break;
 		}
@@ -353,13 +388,13 @@ void search_by_name(BOOK_LIST head)
 		{
 			printf("\n\n");
 			printf("             图书信息\n");
-			printf("-------------------------------\n");
-			printf("    编号：%d\n", p->num);
-			printf("    书名：%s\n", p->name);
-			printf("    作者：%s\n", p->author);
-			printf("    出版社：%s\n", p->publish);
-			printf("    出版时间：%s\n", p->publish_date);
-			printf("-------------------------------\n");
+			printf("  -------------------------------\n");
+			printf("      编号：%d\n", p->num);
+			printf("      书名：%s\n", p->name);
+			printf("      作者：%s\n", p->author);
+			printf("      出版社：%s\n", p->publish);
+			printf("      出版时间：%s\n", p->publish_date);
+			printf("  -------------------------------\n");
 			flag = 1;		//表明已经找到图书（编号唯一，故可停止查询）
 			break;
 		}
@@ -386,10 +421,10 @@ void display_all(BOOK_LIST head)
 	BOOK_LIST p;
 	printf("\n");
 	printf(" +-----------------------------------------------------------------------------------------------+\n");
-	printf(" |%-10s%-25s%-20s%-20s%-20s|\n", "书号", "书名", "作者", "出版社", "出版时间");
+	printf(" |  %-10s%-25s%-20s%-20s%-20s|\n", "书号", "书名", "作者", "出版社", "出版时间");
 	printf(" +-----------------------------------------------------------------------------------------------+\n");
 	for(p = head; p != NULL; p = p->next)
-		printf(" |%-10d%-25s%-20s%-20s%-20s|\n", p->num, p->name, p->author, p->publish, p->publish_date);
+		printf(" |  %-10d%-25s%-20s%-20s%-20s|\n", p->num, p->name, p->author, p->publish, p->publish_date);
 	printf(" +-----------------------------------------------------------------------------------------------+\n");
 	printf("\n\n");
 	printf("   输入Q返回：");
@@ -399,7 +434,7 @@ void display_all(BOOK_LIST head)
 	if (getchar() == 'Q')
 	{
 		system("cls");
-		display_book_info(head);
+		return;
 	}	
 }
 
@@ -411,12 +446,12 @@ void display_unborrowed(BOOK_LIST head)
 	int flag = 0;
 
 	printf(" +-----------------------------------------------------------------------------------------------+\n");
-	printf(" |%-10s%-25s%-20s%-20s%-20s|\n", "书号", "书名", "作者", "出版社", "出版时间");
+	printf(" |  %-10s%-25s%-20s%-20s%-20s|\n", "书号", "书名", "作者", "出版社", "出版时间");
 	printf(" +-----------------------------------------------------------------------------------------------+\n");
 	while (p != NULL) {
 		if (p->status == 0)
 		{
-			printf(" |%-10d%-25s%-20s%-20s%-20s|\n", p->num, p->name, p->author, p->publish, p->publish_date);
+			printf(" |  %-10d%-25s%-20s%-20s%-20s|\n", p->num, p->name, p->author, p->publish, p->publish_date);
 			flag = 1;
 		}
 		p = p->next;
@@ -445,12 +480,12 @@ void display_borrowed(BOOK_LIST head)
 	int flag = 1;
 
 	printf(" +-----------------------------------------------------------------------------------------------+\n");
-	printf(" |%-10s%-25s%-20s%-20s%-20s|\n", "书号", "书名", "作者", "出版社", "出版时间");
+	printf(" |  %-10s%-25s%-20s%-20s%-20s|\n", "书号", "书名", "作者", "出版社", "出版时间");
 	printf(" +-----------------------------------------------------------------------------------------------+\n");
 	while (p != NULL) {
 		if (p->status == 1) 
 		{
-			printf(" |%-10d%-25s%-20s%-20s%-20s|\n", p->num, p->name, p->author, p->publish, p->publish_date);
+			printf(" |  %-10d%-25s%-20s%-20s%-20s|\n", p->num, p->name, p->author, p->publish, p->publish_date);
 			flag = 0;
 		}
 		p = p->next;
@@ -482,6 +517,7 @@ void borrow_book(BOOK_LIST head)
 	BOOK_LIST book_same_name[10] = { 0 };	//链表指针数组
 
 	int i = 0;
+	int flag = 0;
 
 
 	printf("+------------------------------+\n");
@@ -506,43 +542,54 @@ void borrow_book(BOOK_LIST head)
 			for (p = head; p != NULL; p = p->next)
 			{
 				if (p->num == book_num)
+				{
+					flag = 1;
 					break;
+				}
+					
 			}
-			if (p->status == 1)
+			if (flag == 0)
 			{
-				printf("\n 该书已经借出。");
+				printf("查无此书！");
 				Sleep(500);
 				system("cls");
 				return;
 			}
 			else
 			{
-				printf("\n\n----------------------------\n");
-				printf("             图书信息\n");
-				printf("----------------------------\n");
-				printf("    编号：%d\n", p->num);
-				printf("    书名：%s\n", p->name);
-				printf("    作者：%s\n", p->author);
-				printf("    出版社：%s\n", p->publish);
-				printf("    出版时间：%s\n", p->publish_date);
-				printf("-----------------------------\n");
-
-				getchar();
-				printf("\n  是否借阅（Y/N）?  ");
-				if (getchar() == 'Y')
+				if (p->status == 1)
 				{
-					p->status = 1;
-					//p->readerID = 
-					data_to_file(head);
-					printf("\n  借阅成功。");
+					printf("\n 该书已经借出。");
 					Sleep(500);
 					system("cls");
 					return;
 				}
 				else
 				{
-					system("cls");
-					return;
+					printf("\n\n----------------------------\n");
+					printf("             图书信息\n");
+					printf("----------------------------\n");
+					printf("    编号：%d\n", p->num);
+					printf("    书名：%s\n", p->name);
+					printf("    作者：%s\n", p->author);
+					printf("    出版社：%s\n", p->publish);
+					printf("    出版时间：%s\n", p->publish_date);
+					printf("-----------------------------\n");
+
+					getchar();
+					printf("\n  是否借阅（Y/N）?  ");
+					if (getchar() == 'Y')
+					{
+						p->status = 1;
+						strcpy_s(p->readerID, ID);
+						data_to_file(head);
+						printf("\n  借阅成功。");
+						Sleep(500);
+						system("cls");
+						return;
+					}
+					else
+						return;
 				}
 			}
 			break;
@@ -551,72 +598,6 @@ void borrow_book(BOOK_LIST head)
 			getchar();
 			gets_s(book_name);
 
-			//for (p = head; p != NULL; p = p->next)
-			//{
-			//	if (strcmp(p->name, book_name) == 0)
-			//	{
-			//		book_same_name[i] = p;
-			//		i++;
-			//	}			//将同名图书放在一个数组里
-			//}
-			//if (i == 0)
-			//{
-			//	printf("没有该图书。");
-			//	Sleep(500);
-			//	system("cls");
-			//	break;
-			//}
-			//else
-			//{
-			//	printf("\n\n\n一共搜索到%d本图书\n", i);
-			//	printf("----------------------------------------------------------------------------------------------\n");
-			//	printf("%-10s%-15s%-15s%-20s%-20s%-15s\n", "书号", "书名", "作者", "出版社", "出版时间", "序号");
-			//	for (j = 0; j < i; j++)
-			//	{
-			//		printf("%-10d%-15s%-15s%-20s%-20s%-15d\n", book_same_name[j]->num, book_same_name[j]->name, book_same_name[j]->author, book_same_name[j]->publish, book_same_name[j]->publish_date, j + 1);
-			//	}
-			//	printf("----------------------------------------------------------------------------------------------\n");
-
-			//	printf(" 请选择要借阅的书籍序号：");
-			//	scanf_s("%d", &index);
-
-			//	if (book_same_name[index-1]->status == 1)
-			//	{
-			//		printf("\n 该书已经借出。");
-			//		Sleep(500);
-			//		system("cls");
-			//		return;
-			//	}
-			//	else
-			//	{
-			//		if (index > 0 && index <= i)
-			//		{	
-			//			getchar();
-			//			printf("\n  是否借阅（Y/N）?  ");
-			//			if (getchar() == 'Y')
-			//			{
-			//				book_same_name[index - 1]->status = 1;
-			//				data_to_file(head);
-			//				printf("\n  借阅成功。");
-			//				Sleep(500);
-			//				system("cls");
-			//				return;
-			//			}
-			//			else
-			//			{
-			//				system("cls");
-			//				return;
-			//			}
-			//		}
-			//		else
-			//		{
-			//			printf("输入错误");
-			//			Sleep(500);
-			//			system("cls");
-			//			return;
-			//		}
-			//	}	
-			//}
 			for (p = head; p != NULL; p = p->next)
 			{
 				if (strcmp(p->name, book_name) == 0)
@@ -645,7 +626,7 @@ void borrow_book(BOOK_LIST head)
 				if (getchar() == 'Y')
 				{
 					p->status = 1;
-					//p->readerID = 
+					strcpy_s(p->readerID, ID);
 					data_to_file(head);
 					printf("\n  借阅成功。");
 					Sleep(500);
@@ -937,6 +918,7 @@ BOOK_LIST delete_book(BOOK_LIST head)
 	data_to_file(head);
 	Sleep(500);
 	system("cls");
+	return head;
 }
 
 
